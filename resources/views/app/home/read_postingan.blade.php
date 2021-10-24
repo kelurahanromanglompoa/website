@@ -8,7 +8,7 @@
               @if($data)
                 @if($data->cover)
                   <div class="entry-img">
-                    <img src="{{ asset('storage/postingan/'.$data->cover) }}" alt="{{ $data->cover }}" class="img-fluid">
+                    <img src="{{$data->cover}}" alt="{{ $data->cover }}" class="img-fluid">
                   </div>
                 @endif
               @endif

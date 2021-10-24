@@ -64,7 +64,7 @@
                         <label>Avatar</label>
                         @if($data->avatar)
                             <br/>
-                            <img src="{{asset('storage/avatar/'.$data->avatar)}}" style="max-height: 60px;" class="mb-2">
+                            <img src="{{$data->avatar}}" style="max-height: 60px;" class="mb-2">
                         @endif
                         <input class="form-control  @error('file') is-invalid @enderror" name="file" type="file" id="formFile" accept="image/*">
                         <span class="form-text text-muted">

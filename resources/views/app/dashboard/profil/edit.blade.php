@@ -40,7 +40,7 @@
                         <label>Cover</label>
                         @if($data->cover)
                             <br/>
-                            <img src="{{asset('storage/postingan/'.$data->cover)}}" style="max-height: 60px;" class="mb-2">
+                            <img src="{{$data->cover}}" style="max-height: 60px;" class="mb-2">
                         @endif
                         <input class="form-control  @error('file') is-invalid @enderror" name="file" type="file" id="formFile" accept="image/*">
                         <span class="form-text text-muted">

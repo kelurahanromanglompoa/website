@@ -39,6 +39,7 @@
                             <th>Deskripsi</th>
                             <th>Tanggal Diterbitkan</th>
                             <th>Dibuat Oleh</th>
+                            <th>Gambar</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -62,6 +63,13 @@
                                 </td>
                                 <td>
                                     {{$item->penulis->nama_lengkap}}
+                                </td>
+                                <td>
+                                    @if($item->cover)
+                                        <img src={{$item->cover}} style="max-height: 60px;">
+                                    @else
+                                        -
+                                    @endif
                                 </td>
                                 <td>
                                     <a href="{{route('postingans.edit', ['slug' => $slug, 'uuid' => $uuid, 'uuid_item' => $item->uuid])}}" class="badge badge-sm badge-primary m-2">

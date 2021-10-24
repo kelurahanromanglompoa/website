@@ -10,6 +10,8 @@ use \App\Models\{
 };
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\Storage;
+
 class ProfilController extends Controller
 {
     /**
@@ -116,10 +118,15 @@ class ProfilController extends Controller
                     'file.mimes' => 'File yang diizinkan hanya JPG,JPEG dan PNG',
                     'file.max' => 'File maksimal yang dapat diterima sebeasr 2048kb'
                 ]);
-                $path = 'public/profil/';
+
                 $namaFile = 'profil_'.Str::slug(strtolower($request->judul)).'__'.trim($request->file->getClientOriginalName());
-                $data->cover = $namaFile;
-                $request->file->storeAs($path, $namaFile);
+                //$data->cover = $namaFile;
+                //$request->file->storeAs($path, $namaFile);
+
+                //upload file ke google drive
+                Storage::disk('google')->putFileAs("", $request->file, $namaFile);
+                //dd($request->file->store("","google"));
+                $data->cover = Storage::disk('google')->url($namaFile);
             }
 
             $data->save();
@@ -209,12 +216,15 @@ class ProfilController extends Controller
                     'file.max' => 'File maksimal yang dapat diterima sebeasr 2048kb'
                 ]);
 
-                File::delete('storage/profil/'.$data->cover);
 
-                $path = 'public/profil/';
+
+                //delete file with fileid then upload a new one if admin change the file
                 $namaFile = 'profil__'.Str::slug(strtolower($request->judul)).'__'.trim($request->file->getClientOriginalName());
-                $data->cover = $namaFile;
-                $request->file->storeAs($path, $namaFile);
+                $fileid = trim($data->cover, "https://drive.google.com/uc?id=&export=media");
+                Storage::disk('google')->delete($fileid);
+                Storage::disk('google')->putFileAs("", $request->file, $namaFile);
+                //dd($request->file->store("","google"));
+                $data->cover = Storage::disk('google')->url($namaFile);
             }
 
             $data->save();
@@ -237,8 +247,9 @@ class ProfilController extends Controller
         $data = Profil::whereUuid($uuid_item)->first();
         DB::beginTransaction();
         try{
-            if($data->nama_file){
-                File::delete('storage/profil/'.$data->nama_file);
+            if($data->cover){
+                $fileid = trim($data->cover, "https://drive.google.com/uc?id=&export=media");
+                Storage::disk('google')->delete($fileid);
             }
             $data->delete();
             DB::commit();

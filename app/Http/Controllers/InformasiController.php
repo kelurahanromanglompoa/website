@@ -9,6 +9,7 @@ use \App\Models\{
     Informasi
 };
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class InformasiController extends Controller
 {
@@ -129,10 +130,10 @@ class InformasiController extends Controller
                     'file.mimes' => 'File yang diizinkan hanya JPG,JPEG dan PNG',
                     'file.max' => 'File maksimal yang dapat diterima sebeasr 2048kb'
                 ]);
-                $path = 'public/postingan/';
+                
                 $namaFile = 'postingan__'.Str::slug(strtolower($request->judul)).'__'.trim($request->file->getClientOriginalName());
-                $data->cover = $namaFile;
-                $request->file->storeAs($path, $namaFile);
+                Storage::disk('google')->putFileAs("", $request->file, $namaFile);
+                $data->cover = Storage::disk('google')->url($namaFile);
             }
 
             $data->save();
@@ -229,12 +230,14 @@ class InformasiController extends Controller
                     'file.max' => 'File maksimal yang dapat diterima sebeasr 2048kb'
                 ]);
 
-                File::delete('storage/postingan/'.$data->cover);
-
-                $path = 'public/postingan/';
+                //delete file with fileid then upload a new one if admin change the file
                 $namaFile = 'postingan__'.Str::slug(strtolower($request->judul)).'__'.trim($request->file->getClientOriginalName());
-                $data->cover = $namaFile;
-                $request->file->storeAs($path, $namaFile);
+                $fileid = trim($data->cover, "https://drive.google.com/uc?id=&export=media");
+                Storage::disk('google')->delete($fileid);
+                //upload file to gdrive
+                Storage::disk('google')->putFileAs("", $request->file, $namaFile);
+                //dd($request->file->store("","google"));
+                $data->cover = Storage::disk('google')->url($namaFile);
             }
 
             $data->save();
@@ -258,7 +261,8 @@ class InformasiController extends Controller
         DB::beginTransaction();
         try{
             if($data->cover){
-                File::delete('storage/postingan/'.$data->cover);
+                $fileid = trim($data->cover, "https://drive.google.com/uc?id=&export=media");
+                Storage::disk('google')->delete($fileid);
             }
             $data->delete();
             DB::commit();

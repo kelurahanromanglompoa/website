@@ -9,6 +9,7 @@ use \App\Models\{
     Dokumen
 };
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class DocumentController extends Controller
 {
@@ -120,10 +121,9 @@ class DocumentController extends Controller
             $data->tanggal_posting = $request->tanggal_posting;
             $data->created_by = auth()->user()->id;
 
-            $path = 'public/dokumen/';
-            $namaFile = 'dokumen__'.Str::slug(strtolower($request->judul)).'__'.trim($request->file->getClientOriginalName());
-            $data->nama_file = $namaFile;
-            $request->file->storeAs($path, $namaFile);
+            $namaFile = 'document__'.Str::slug(strtolower($request->judul)).'__'.trim($request->file->getClientOriginalName());
+            Storage::disk('google')->putFileAs("", $request->file, $namaFile);
+            $data->nama_file = Storage::disk('google')->url($namaFile);
 
             $data->save();
             DB::commit();
@@ -213,15 +213,18 @@ class DocumentController extends Controller
                 ],[
                     'file.required' => 'Dokumen harus diisi',
                     'file.mimes' => 'Dokumen yang diizinkan hanya PDF',
-                    'file.max' => 'Dokumen maksimal yang dapat diterima sebeasr 20480kb'
+                    'file.max' => 'Dokumen maksimal yang dapat diterima sebesar 20480kb'
                 ]);
 
-                File::delete('storage/dokumen/'.$data->nama_file);
 
-                $path = 'public/dokumen/';
-                $namaFile = 'dokumen__'.Str::slug(strtolower($request->judul)).'__'.trim($request->file->getClientOriginalName());
-                $data->nama_file = $namaFile;
-                $request->file->storeAs($path, $namaFile);
+                //delete file with fileid then upload a new one if admin change the file
+                $namaFile = 'document__'.Str::slug(strtolower($request->judul)).'__'.trim($request->file->getClientOriginalName());
+                $fileid = trim($data->nama_file, "https://drive.google.com/uc?id=&export=media");
+                Storage::disk('google')->delete($fileid);
+                //upload file to gdrive
+                Storage::disk('google')->putFileAs("", $request->file, $namaFile);
+                //dd($request->file->store("","google"));
+                $data->nama_file = Storage::disk('google')->url($namaFile);
             }
 
             $data->save();
@@ -245,7 +248,8 @@ class DocumentController extends Controller
         DB::beginTransaction();
         try{
             if($data->nama_file){
-                File::delete('storage/dokumen/'.$data->nama_file);
+                $fileid = trim($data->nama_file, "https://drive.google.com/uc?id=&export=media");
+                Storage::disk('google')->delete($fileid);
             }
             $data->delete();
             DB::commit();
