@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use DB;
 use Hash;
 use File;
 use \App\Models\{
     JenisInformasi, JenisDokumen, JenisProfil, User, Role
 };
-
+use Illuminate\Support\Facades\Storage;
 class UserController extends Controller
 {
     /**
@@ -104,10 +105,9 @@ class UserController extends Controller
                     'file.mimes' => 'File yang diizinkan hanya JPG,JPEG dan PNG',
                     'file.max' => 'File maksimal yang dapat diterima sebeasr 512kb'
                 ]);
-                $path = 'public/avatar/';
-                $namaFile = 'avatar__'.$request->username.'__'.trim($request->file->getClientOriginalName());
-                $data->avatar = $namaFile;
-                $request->file->storeAs($path, $namaFile);
+                $namaFile = 'avatar__'.Str::slug(strtolower($request->judul)).'__'.trim($request->file->getClientOriginalName());
+                Storage::disk('google')->putFileAs("", $request->file, $namaFile);
+                $data->avatar = Storage::disk('google')->url($namaFile);
 
             }
             $data->role_id = $request->role_id;
@@ -214,10 +214,14 @@ class UserController extends Controller
                     'file.mimes' => 'File yang diizinkan hanya JPG,JPEG dan PNG',
                     'file.max' => 'File maksimal yang dapat diterima sebeasr 512kb'
                 ]);
-                $path = 'public/avatar/';
-                $namaFile = 'avatar__'.$request->username.'__'.trim($request->file->getClientOriginalName());
-                $request->file->storeAs($path, $namaFile);
-                $data->avatar = $namaFile;
+                //delete file with fileid then upload a new one if admin change the file
+                $namaFile = 'avatar__'.Str::slug(strtolower($request->judul)).'__'.trim($request->file->getClientOriginalName());
+                $fileid = trim($data->avatar, "https://drive.google.com/uc?id=&export=media");
+                Storage::disk('google')->delete($fileid);
+                //upload file to gdrive
+                Storage::disk('google')->putFileAs("", $request->file, $namaFile);
+                //dd($request->file->store("","google"));
+                $data->avatar = Storage::disk('google')->url($namaFile);
             }
             $data->role_id = $request->role_id;
             $data->nama_lengkap = $request->nama_lengkap;
@@ -243,7 +247,8 @@ class UserController extends Controller
         DB::beginTransaction();
         try{
             if($data->avatar){
-                File::delete('storage/avatar/'.$data->avatar);
+                $fileid = trim($data->avatar, "https://drive.google.com/uc?id=&export=media");
+                Storage::disk('google')->delete($fileid);
             }
             $data->delete();
             DB::commit();
