@@ -1646,7 +1646,7 @@
                     <span class="symbol symbol-lg-35 symbol-25 symbol-light-success">
                         <span class="symbol-label font-size-h5 font-weight-bold">
                             @if(auth()->user()->avatar)
-                                <img src="{{asset('storage/avatar/'.auth()->user()->avatar)}}" class="max-h-50px rounded-0" >
+                                <img src="{{auth()->user()->avatar}}" class="max-h-50px rounded-0" >
                             @else
                                 {{auth()->user()->nama_lengkap[0]}}
                             @endif

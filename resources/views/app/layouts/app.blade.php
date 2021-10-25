@@ -160,7 +160,7 @@
                 <div class="mr-5 symbol symbol-100">
                     <div class="symbol-label">
                         @if(auth()->user()->avatar)
-                                <img src="{{asset('storage/avatar/'.auth()->user()->avatar)}}" class="max-h-50px rounded-0" >
+                                <img src="{{auth()->user()->avatar}}" class="max-h-50px rounded-0" >
                             @else
                                 {{auth()->user()->nama_lengkap[0]}}
                             @endif
