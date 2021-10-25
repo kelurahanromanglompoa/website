@@ -46,7 +46,7 @@
                         @forelse($datas as $item)
                             <tr>
                                 <td>
-                                    <a href="{{asset('storage/dokumen/'.$item->nama_file)}}" target="_blank">
+                                    <a href="{{$item->nama_file}}" target="_blank">
                                         {{$item->judul}}
                                     </a>
                                 </td>

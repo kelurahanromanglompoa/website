@@ -28,7 +28,7 @@
                                         <i class="bi bi-eye"></i>
                                     </a>
                                     <br/>
-                                    <a href="{{asset('storage/dokumen/'.$item->nama_file)}}" target="blank" class="btn btn-sm btn-primary mt-2">
+                                    <a href="{{$item->nama_file}}" target="blank" class="btn btn-sm btn-primary mt-2">
                                         <i class="bi bi-download"></i>
                                     </a>
                                 </td>

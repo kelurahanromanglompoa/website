@@ -40,6 +40,7 @@
                             <th>Judul</th>
                             <th>Deskripsi</th>
                             <th>Dibuat Oleh</th>
+                            <th>File</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -53,6 +54,13 @@
                 
                                 <td>
                                     {{$item->penulis->nama_lengkap}}
+                                </td>
+                                <td>
+                                    @if($item->cover)
+                                        <img src={{$item->cover}} style="max-height: 60px;">
+                                    @else
+                                        -
+                                    @endif
                                 </td>
                                 <td>
                                     <a href="{{route('profils.edit', ['slug' => $slug, 'uuid' => $uuid, 'uuid_item' => $item->uuid])}}" class="badge badge-sm badge-primary m-2">

@@ -11,7 +11,7 @@
                 <article class="entry">
                 @if($item->cover)
                     <div class="entry-img">
-                        <img src="{{asset('storage/postingan/'.$item->cover)}}" alt="" class="img-fluid">
+                        <img src="{{$data->cover}}" alt="" class="img-fluid">
                     </div>
                 @endif
                 <h2 class="entry-title">

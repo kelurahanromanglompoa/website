@@ -48,7 +48,7 @@
                             <tr>
                                 <td style="text-align: center;vertical-align:middle">
                                     @if($item->avatar)
-                                        <img src="{{asset('/storage/avatar').'/'.$item->avatar}}" style="max-height: 60px;">
+                                        <img src="{{$item->avatar}}" style="max-height: 60px;">
                                     @else
                                         -
                                     @endif

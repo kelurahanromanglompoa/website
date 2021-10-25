@@ -49,7 +49,7 @@
                             File Dokumen
                         </label>
                         <br/>
-                            <a class="btn btn-success btn-sm mb-2" href="{{asset('storage/dokumen/'.$data->nama_file)}}" target="_blank">
+                            <a class="btn btn-success btn-sm mb-2" href="{{$data->nama_file}}" target="_blank">
                                 <span class="fa fa-file"></span> dokumen 
                             </a>
                         <br/>
