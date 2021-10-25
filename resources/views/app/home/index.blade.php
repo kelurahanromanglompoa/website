@@ -17,7 +17,7 @@
             @forelse($postingans as $item)
             <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-8 mt-md-0" data-aos="zoom-in" data-aos-delay="200" style="margin-top: 30px;">
                 <div class="icon-box">
-                    <div class="icon"><i class="bx bx-file"></i></div>
+                    <div class="icon"><img src={{$item->cover}} style="max-height: 60px;"></div>
                     <h4>
                         <a href="{{route('home.postingans.read', ['slug' => $item->slug, 'uuid' => $item->uuid])}}">
                             {{$item->judul}}
