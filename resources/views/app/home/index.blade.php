@@ -19,7 +19,7 @@
                 <div class="icon-box">
                     <div class="icon"><i class="bx bx-file"></i></div>
                     <h4>
-                        <a href="{{route('home.dokumens.read', ['slug' => $item->slug, 'uuid' => $item->uuid])}}">
+                        <a href="{{route('home.postingans.read', ['slug' => $item->slug, 'uuid' => $item->uuid])}}">
                             {{$item->judul}}
                         </a>
                     </h4>

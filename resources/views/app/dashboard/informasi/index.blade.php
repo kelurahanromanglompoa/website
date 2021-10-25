@@ -55,22 +55,27 @@
                                     <br/>
                                     (Dibaca {{$item->viewers}} kali)
                                 </td>
+
                                 <td>
                                     {!! Str::limit($item->deskripsi, 300) !!}
                                 </td>
+
                                 <td>
                                     {{date('d M Y', strtotime($item->tanggal_posting))}}
                                 </td>
+
                                 <td>
                                     {{$item->penulis->nama_lengkap}}
                                 </td>
+
                                 <td>
-                                    @if($item->cover)
+                                    @if($item->cover!= NULL)
                                         <img src={{$item->cover}} style="max-height: 60px;">
                                     @else
                                         -
                                     @endif
                                 </td>
+
                                 <td>
                                     <a href="{{route('postingans.edit', ['slug' => $slug, 'uuid' => $uuid, 'uuid_item' => $item->uuid])}}" class="badge badge-sm badge-primary m-2">
                                         Edit
